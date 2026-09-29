@@ -1,4 +1,14 @@
-export default function SettingsPage() {
+import {auth} from "@/auth";
+import {redirect} from "next/navigation";
+
+export default async function settingsPage() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/api/auth/signin");
+  }
+
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
       <section>

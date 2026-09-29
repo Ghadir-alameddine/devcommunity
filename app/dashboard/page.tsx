@@ -1,3 +1,6 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+
 import Link from "next/link";
 
 const statistics = [
@@ -31,7 +34,12 @@ const communities = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/api/auth/signin");
+  }
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
       <section className="flex flex-col justify-between gap-6 md:flex-row md:items-center">

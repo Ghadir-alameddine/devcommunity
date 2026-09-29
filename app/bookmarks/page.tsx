@@ -1,4 +1,7 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation"; 
 import BlogCard from "@/components/BlogCard";
+
 
 const bookmarkedArticles = [
   {
@@ -17,7 +20,14 @@ const bookmarkedArticles = [
   },
 ];
 
-export default function BookmarksPage() {
+export default async function BookmarksPage() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/api/auth/signin");
+  }
+
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
       <section>

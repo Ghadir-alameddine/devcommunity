@@ -1,3 +1,7 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+
+
 import Link from "next/link";
 
 type EditArticlePageProps = {
@@ -7,8 +11,13 @@ type EditArticlePageProps = {
 export default async function EditArticlePage({
   params,
 }: EditArticlePageProps) {
-  const { slug } = await params;
+  const session = await auth();
 
+  if (!session?.user) {
+    redirect("/api/auth/signin");
+  }
+
+  const { slug } = await params;
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
       <section>
