@@ -1,11 +1,16 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-
-
+import { connectToDatabase } from "@/lib/mongodb";
+import Community from "@/models/Community";
+import Post from "@/models/Post";
+import User from "@/models/User";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { updatePost } from "./actions";
 
 type EditArticlePageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{
+    slug: string;
+  }>;
 };
 
 export default async function EditArticlePage({
@@ -13,11 +18,43 @@ export default async function EditArticlePage({
 }: EditArticlePageProps) {
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session?.user?.email) {
     redirect("/api/auth/signin");
   }
 
   const { slug } = await params;
+
+  await connectToDatabase();
+
+  const user = await User.findOne({
+    email: session.user.email.toLowerCase(),
+  });
+
+  if (!user) {
+    redirect("/api/auth/signin");
+  }
+
+  const post = await Post.findOne({ slug });
+
+  if (!post) {
+    notFound();
+  }
+
+  if (post.author.toString() !== user._id.toString()) {
+    notFound();
+  }
+
+  const [communities, currentCommunity] = await Promise.all([
+    Community.find({}).sort({ name: 1 }),
+    Community.findById(post.community),
+  ]);
+
+  if (!currentCommunity) {
+    notFound();
+  }
+
+  const updatePostWithSlug = updatePost.bind(null, slug);
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
       <section>
@@ -30,7 +67,10 @@ export default async function EditArticlePage({
         </p>
       </section>
 
-      <form className="mt-8 space-y-6 rounded-xl border border-gray-200 bg-white p-6">
+      <form
+        action={updatePostWithSlug}
+        className="mt-8 space-y-6 rounded-xl border border-gray-200 bg-white p-6"
+      >
         <div>
           <label
             htmlFor="title"
@@ -43,7 +83,8 @@ export default async function EditArticlePage({
             id="title"
             name="title"
             type="text"
-            defaultValue="Understanding Dynamic Routes in Next.js"
+            defaultValue={post.title}
+            required
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
           />
         </div>
@@ -59,12 +100,18 @@ export default async function EditArticlePage({
           <select
             id="community"
             name="community"
-            defaultValue="nextjs-developers"
+            defaultValue={currentCommunity.slug}
+            required
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
           >
-            <option value="nextjs-developers">Next.js Developers</option>
-            <option value="python-developers">Python Developers</option>
-            <option value="devops-community">DevOps Community</option>
+            {communities.map((community) => (
+              <option
+                key={community._id.toString()}
+                value={community.slug}
+              >
+                {community.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -80,7 +127,7 @@ export default async function EditArticlePage({
             id="tags"
             name="tags"
             type="text"
-            defaultValue="Next.js, TypeScript, Routing"
+            defaultValue={post.tags.join(", ")}
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
           />
         </div>
@@ -97,7 +144,8 @@ export default async function EditArticlePage({
             id="content"
             name="content"
             rows={12}
-            defaultValue="Dynamic routes allow us to create pages using URL parameters."
+            defaultValue={post.content}
+            required
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
           />
         </div>

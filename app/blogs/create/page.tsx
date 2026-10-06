@@ -1,5 +1,6 @@
 import {auth} from "@/auth";
 import {redirect} from "next/navigation";
+import { createPost } from "./actions";
 
 import Link from "next/link";
 
@@ -20,7 +21,10 @@ export default async function CreateArticlePage() {
         </p>
       </section>
 
-      <form className="mt-8 space-y-6 rounded-xl border border-gray-200 bg-white p-6">
+      <form
+  action={createPost}
+  className="mt-8 space-y-6 rounded-xl border border-gray-200 bg-white p-6"
+>
         <div>
           <label
             htmlFor="title"
@@ -34,7 +38,7 @@ export default async function CreateArticlePage() {
             name="title"
             type="text"
             placeholder="Enter your article title"
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
+            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3" required
           />
         </div>
 
@@ -50,7 +54,7 @@ export default async function CreateArticlePage() {
             id="community"
             name="community"
             defaultValue=""
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
+            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"   required 
           >
             <option value="" disabled>
               Select a community
@@ -74,7 +78,7 @@ export default async function CreateArticlePage() {
             name="tags"
             type="text"
             placeholder="Next.js, TypeScript, Routing"
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
+            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"  required
           />
 
           <p className="mt-2 text-sm text-gray-500">
@@ -95,7 +99,7 @@ export default async function CreateArticlePage() {
             name="content"
             rows={12}
             placeholder="Write your article here..."
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
+            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3" required
           />
         </div>
 
