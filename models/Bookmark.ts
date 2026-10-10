@@ -3,6 +3,8 @@ import mongoose, { Schema, Types } from "mongoose";
 interface IBookmark {
   user: Types.ObjectId;
   post: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const BookmarkSchema = new Schema<IBookmark>(
@@ -22,6 +24,7 @@ const BookmarkSchema = new Schema<IBookmark>(
 );
 
 BookmarkSchema.index({ user: 1, post: 1 }, { unique: true });
+BookmarkSchema.index({ user: 1, createdAt: -1 });
 
 const Bookmark =
   mongoose.models.Bookmark ||

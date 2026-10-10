@@ -3,10 +3,13 @@ import { connectToDatabase } from "@/lib/mongodb";
 import "@/models/Community";
 import Comment from "@/models/Comment";
 import Post from "@/models/Post";
-import "@/models/User";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { deletePost } from "./actions";
+import Bookmark from "@/models/Bookmark";
+import User from "@/models/User";
+import { toggleBookmark } from "./bookmark-actions";
 import {
   createComment,
   deleteComment,
@@ -52,6 +55,20 @@ export default async function BlogPage({
   if (!blog) {
     notFound();
   }
+  const currentUser = session?.user?.email
+  ? await User.findOne({
+      email: session.user.email.toLowerCase(),
+    })
+  : null;
+
+const isBookmarked = currentUser
+  ? Boolean(
+      await Bookmark.exists({
+        user: currentUser._id,
+        post: blog._id,
+      })
+    )
+  : false;
 
   const comments = await Comment.find({
     post: blog._id,
@@ -68,6 +85,7 @@ export default async function BlogPage({
 
   const deletePostWithSlug = deletePost.bind(null, slug);
   const createCommentForPost = createComment.bind(null, slug);
+  const toggleBookmarkForPost = toggleBookmark.bind(null, slug);
 
   const createdAt =
     blog.createdAt instanceof Date
@@ -111,9 +129,18 @@ export default async function BlogPage({
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <button className="rounded-lg border border-gray-300 px-5 py-2 font-medium">
-            Bookmark
-          </button>
+        <form action={toggleBookmarkForPost}>
+  <button
+    type="submit"
+    className={`rounded-lg border px-5 py-2 font-medium ${
+      isBookmarked
+        ? "border-blue-600 bg-blue-50 text-blue-700"
+        : "border-gray-300"
+    }`}
+  >
+    {isBookmarked ? "Remove Bookmark" : "Bookmark"}
+  </button>
+</form>
 
           {isOwner && (
             <>
