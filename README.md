@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevCommunity
+
+DevCommunity is a full-stack platform where developers can join communities, publish technical articles, comment on posts, save articles and manage their developer profiles.
+
+This project was created as the TechTalks Full-Stack Development Capstone Project.
+
+## Features
+
+- GitHub and Google authentication
+- Protected routes for authenticated users
+- Developer profiles and profile settings
+- Create, read, update and delete articles
+- Article ownership and authorization
+- Communities with join and leave functionality
+- Comments with author-only deletion
+- Article bookmarks
+- Search, filtering and pagination
+- Personalized dashboard
+- REST API using Next.js Route Handlers
+- Server-side validation with Zod
+- Loading, empty and error states
+- Responsive interface
+
+## Technologies
+
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- MongoDB Atlas
+- Mongoose
+- Auth.js
+- Zod
+- Vercel
+
+## Rendering Strategies
+
+The application uses multiple Next.js rendering strategies:
+
+- **Static Site Generation (SSG):** The home page contains fixed public content and is generated during the production build.
+- **Incremental Static Regeneration (ISR):** The communities page is cached and revalidated every 60 seconds to display updated MongoDB data efficiently.
+- **Dynamic Rendering:** Authenticated and personalized pages, such as the dashboard, settings and bookmarks, are generated using current session and database data.
+
+## Main Routes
+
+| Route | Description |
+| --- | --- |
+| `/` | Home page |
+| `/blogs` | Browse, search and filter articles |
+| `/blogs/create` | Create an article |
+| `/blogs/[slug]` | View an article and its comments |
+| `/blogs/[slug]/edit` | Edit an owned article |
+| `/communities` | Browse communities |
+| `/communities/[slug]` | Community details and articles |
+| `/dashboard` | Personalized developer dashboard |
+| `/bookmarks` | Saved articles |
+| `/profile` | Current developer profile |
+| `/profile/[username]` | Public developer profile |
+| `/settings` | Edit profile information |
+
+## REST API
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/posts` | Get posts with search and pagination |
+| `POST` | `/api/posts` | Create an authenticated user's post |
+| `GET` | `/api/posts/[id]` | Get one post |
+| `PATCH` | `/api/posts/[id]` | Update an owned post |
+| `DELETE` | `/api/posts/[id]` | Delete an owned post |
+
+## Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+AUTH_SECRET=your_auth_secret
+
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+```
+
+Never commit `.env.local` or expose these secret values publicly.
 
 ## Getting Started
 
-First, run the development server:
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Add the required environment variables to `.env.local`, then start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the following command to verify the production build:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application will be deployed using Vercel.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Live application: Coming soon
 
-## Deploy on Vercel
+## Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Ghadir Alameddine**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- GitHub: [Ghadir-alameddine](https://github.com/Ghadir-alameddine)
