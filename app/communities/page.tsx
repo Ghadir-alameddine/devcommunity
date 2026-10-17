@@ -2,7 +2,7 @@ import CommunityCard from "@/components/CommunityCard";
 import { connectToDatabase } from "@/lib/mongodb";
 import Community from "@/models/Community";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function CommunitiesPage() {
   await connectToDatabase();
