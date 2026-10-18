@@ -115,6 +115,10 @@ The application will be deployed using Vercel.
 
 Live application: https://devcommunity-delta.vercel.app/
 
+## Project Status
+
+The capstone is complete and deployed. Production authentication, MongoDB connectivity and the core application features have been tested successfully.
+
 ## Author
 
 **Ghadir Alameddine**
