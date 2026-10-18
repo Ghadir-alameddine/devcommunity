@@ -113,7 +113,7 @@ npm run build
 
 The application will be deployed using Vercel.
 
-Live application: Coming soon
+Live application: https://devcommunity-delta.vercel.app/
 
 ## Author
 
